@@ -5,8 +5,8 @@ module irig_timestamp (
 	                   input  irig_d1,
 	                   input  irig_mark,
 	                   output pps,
-                       output reg [16:0] ts_seconds,
-	                   input  reset
+	                   output reg [16:0] ts_seconds,
+	                   input  rst
                        );
 
     localparam ST_UNLOCKED = 4'd0,
@@ -14,13 +14,13 @@ module irig_timestamp (
       ST_START    = 4'd2,
       ST_SECONDS  = 4'd3,
       ST_MINUTES  = 4'd4,
-	  ST_HOURS    = 4'd5,
-	  ST_DAYS     = 4'd6,
-	  ST_DAYS2    = 4'd7,
-	  ST_YEAR     = 4'd8,
+      ST_HOURS    = 4'd5,
+      ST_DAYS     = 4'd6,
+      ST_DAYS2    = 4'd7,
+      ST_YEAR     = 4'd8,
       ST_UNUSED1  = 4'd9,
       ST_UNUSED2  = 4'd10,
-	  ST_SEC_DAY  = 4'd11,
+      ST_SEC_DAY  = 4'd11,
       ST_SEC_DAY2 = 4'd12;
 
     // PPS generation
@@ -41,11 +41,11 @@ module irig_timestamp (
     // negedge-registered signal, but it is directly
     // generated from the change in the IRIG signal so should
     // be set up.
-    assign pps <= irig && pps_en_dly;
+    assign pps = irig && pps_en_dly;
 
     // Registers
     always @(posedge clk) begin
-	    if (reset) begin
+	    if (rst) begin
 		    state <= ST_UNLOCKED;
             pps_en_dly <= 1'b0;
             irig_cnt <= 4'b0;

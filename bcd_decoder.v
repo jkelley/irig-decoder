@@ -23,6 +23,6 @@ module bcd_decoder (
           endcase
     end
 
-    assign value <= (bcd_bit << bcd_bit_idx) * bcd_multiplier;
+    assign value = (bcd_bit << bcd_bit_idx) * bcd_multiplier;
 
 endmodule
