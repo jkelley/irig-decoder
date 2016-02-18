@@ -96,14 +96,16 @@ module irig_testbench();
             irig_bit(MARK); // 89
             irig_bitstream(9'b001111110);
             irig_bit(MARK); // 99            
-            
-    endtask; // irig_timestamp
+          end
+    endtask // irig_timestamp
 
     // Send a stream of IRIG bits
     // 'x' means skip completely FIX ME?
     task irig_bitstream;
         input [8:0] s;
-        repeat (9) begin
+        begin
+        repeat (9) 
+          begin
             case (s[0])
               1'b1:
                 irig_bit(D0);
@@ -111,6 +113,7 @@ module irig_testbench();
                 irig_bit(D1);
             endcase // case (s[0])
             s = s >> 1'b1;
+          end 
         end
     endtask
               
