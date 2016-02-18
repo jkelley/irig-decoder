@@ -1,6 +1,6 @@
 module irig_timestamp (
 	                   input  clk,
-                       input  irig,
+                       input  irigb,
 	                   input  irig_d0,
 	                   input  irig_d1,
 	                   input  irig_mark,
@@ -41,7 +41,7 @@ module irig_timestamp (
     // negedge-registered signal, but it is directly
     // generated from the change in the IRIG signal so should
     // be set up.
-    assign pps = irig & pps_en_dly;
+    assign pps = irigb & pps_en_dly;
 
     // Registers
     always @(posedge clk) begin

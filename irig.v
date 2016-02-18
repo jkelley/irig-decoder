@@ -13,6 +13,7 @@ module irig(input clk_10mhz,
                          .rst(rst));
     
     irig_timestamp it(.clk(clk_10mhz),
+                      .irigb(irigb),
                       .irig_d0(irig_d0),
                       .irig_d1(irig_d1),
                       .irig_mark(irig_mark),
