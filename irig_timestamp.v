@@ -41,7 +41,7 @@ module irig_timestamp (
     // negedge-registered signal, but it is directly
     // generated from the change in the IRIG signal so should
     // be set up.
-    assign pps = irig && pps_en_dly;
+    assign pps = irig & pps_en_dly;
 
     // Registers
     always @(posedge clk) begin
@@ -49,6 +49,7 @@ module irig_timestamp (
 		    state <= ST_UNLOCKED;
             pps_en_dly <= 1'b0;
             irig_cnt <= 4'b0;
+            ts_seconds <= 17'b0;
         end
 	    else begin
 		    state <= next_state;
