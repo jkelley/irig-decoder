@@ -6,7 +6,6 @@ module irig_testbench();
     localparam D1 = 3'b010;
     localparam D0 = 3'b001;
 
-
     // Inputs to the DUT
     reg clk_10mhz;
     reg rst;
@@ -14,12 +13,24 @@ module irig_testbench();
  
     // Output of the DUT
     wire pps;    
+    wire [5:0] ts_second;
+    wire [5:0] ts_minute;
+    wire [4:0] ts_hour;
+    wire [8:0] ts_day;
+    wire [6:0] ts_year;
+    wire [16:0] ts_sec_day;
     
     // Instantiate the DUT
     irig i1(.clk_10mhz(clk_10mhz),
+            .rst(rst),
             .irigb(irigb),
-            .pps(pps),         
-            .rst(rst));
+            .pps(pps),
+            .ts_second(ts_second),
+            .ts_minute(ts_minute),
+            .ts_hour(ts_hour),
+            .ts_day(ts_day),
+            .ts_year(ts_year),
+            .ts_sec_day(ts_sec_day));
             
     // Reset
     initial begin
