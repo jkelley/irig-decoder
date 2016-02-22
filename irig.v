@@ -1,3 +1,14 @@
+//
+// IRIG-B decoder for WR-LEN White Rabbit node
+//
+// Given a 10 MHz clock and unmodulated IRIG-B
+// input, provides binary timestamp indicating
+// the absolute time and a PPS signal.
+//
+// John Kelley
+// WIPAC / Univ. of Wisconsin-Madison
+// jkelley@icecube.wisc.edu
+//
 module irig(input         clk_10mhz,
             input         rst,
 			input         irigb,
