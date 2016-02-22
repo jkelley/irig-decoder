@@ -24,9 +24,9 @@ module irig(input         clk_10mhz,
     wire                  irig_d1;
     wire                  irig_mark;
     wire                  pps_gate;
-    wire [3:0]            ts_select;
+    wire [2:0]            ts_select;
     wire                  ts_reset;
-    wire [3:0]            bit_idx;
+    wire [4:0]            bit_idx;
     wire [1:0]            digit_idx;
     wire                  bit_value;
 

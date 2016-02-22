@@ -1,9 +1,9 @@
 module irig_timestamp(
                       input             clk,
                       input             rst,
-                      input [4:0]       ts_select,
+                      input [2:0]       ts_select,
                       input             ts_reset,
-                      input [2:0]       bit_idx ,
+                      input [4:0]       bit_idx ,
                       input [1:0]       digit_idx ,
                       input             bit_value,
                       output reg [5:0]  ts_second,
@@ -43,15 +43,15 @@ module irig_timestamp(
             // and accumulate the sum
             case (ts_select)
               TS_SELECT_SECOND:
-                ts_second <= ts_second + value;
+                ts_second <= ts_second + value[5:0];
               TS_SELECT_MINUTE:
-                ts_minute <= ts_minute + value;
+                ts_minute <= ts_minute + value[5:0];
               TS_SELECT_HOUR:
-                ts_hour <= ts_hour + value;
+                ts_hour <= ts_hour + value[4:0];
               TS_SELECT_DAY:
                 ts_day <= ts_day + value;
               TS_SELECT_YEAR:
-                ts_year <= ts_year + value;
+                ts_year <= ts_year + value[6:0];
               TS_SELECT_SEC_DAY:
                 // This field is a normal binary stream
                 ts_sec_day <= ts_sec_day | (bit_value << bit_idx);

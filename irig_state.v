@@ -7,7 +7,7 @@ module irig_state (
 	               output reg       pps_gate, 
                    output reg       ts_reset,
                    output reg [2:0] ts_select,
-                   output reg [3:0] bit_idx,
+                   output reg [4:0] bit_idx,
                    output reg [1:0] digit_idx,
                    output reg       bit_value);
 
@@ -69,7 +69,10 @@ module irig_state (
         next_state = state;
         pps_en = 1'b0;
         ts_reset = 1'b0;
-        ts_select = 5'b0;
+        ts_select = 3'b0;
+		  bit_idx = 4'b0;
+		  digit_idx = 2'b0;
+		  bit_value = 1'b0;
 	    case (state)
 	      ST_UNLOCKED: begin
 		      if (irig_mark)
@@ -118,7 +121,7 @@ module irig_state (
 	      ST_DAY: begin
               ts_select = TS_SELECT_DAY;
               bit_idx = (irig_cnt > 4'd4) ? irig_cnt-4'd5 : irig_cnt;
-              digit_idx = (irig_cnt > 4'd4) ? 2'b1 : 2'b0;
+              digit_idx = (irig_cnt > 4'd4) ? 2'd1 : 2'd0;
               bit_value = irig_d1 && !(irig_cnt == 4'd4);
 
 		      if (irig_mark)
@@ -127,7 +130,7 @@ module irig_state (
 	      ST_DAY2: begin
               ts_select = TS_SELECT_DAY;
               bit_idx = irig_cnt;
-              digit_idx = 2'b3;
+              digit_idx = 2'd3;
               bit_value = irig_d1 && !(irig_cnt > 4'd1);
 
 		      if (irig_mark)
@@ -136,7 +139,7 @@ module irig_state (
 	      ST_YEAR: begin
               ts_select = TS_SELECT_YEAR;
               bit_idx = (irig_cnt > 4'd4) ? irig_cnt-4'd5 : irig_cnt;
-              digit_idx = (irig_cnt > 4'd4) ? 2'b1 : 2'b0;
+              digit_idx = (irig_cnt > 4'd4) ? 2'd1 : 2'd0;
               bit_value = irig_d1 && !(irig_cnt == 4'd4);
 
 		      if (irig_mark)
@@ -159,7 +162,7 @@ module irig_state (
 	      end
 	      ST_SEC_DAY2: begin
               ts_select = TS_SELECT_SEC_DAY;
-              bit_idx = irig_cnt+4'd9;
+              bit_idx = irig_cnt+5'd9;
               bit_value = irig_d1;
 		      if (irig_mark) begin
 			      next_state = ST_START;
