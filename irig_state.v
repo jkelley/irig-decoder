@@ -130,7 +130,7 @@ module irig_state (
 	      ST_DAY2: begin
               ts_select = TS_SELECT_DAY;
               bit_idx = irig_cnt;
-              digit_idx = 2'd3;
+              digit_idx = 2'd2;
               bit_value = irig_d1 && !(irig_cnt > 4'd1);
 
 		      if (irig_mark)
