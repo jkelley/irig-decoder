@@ -5,7 +5,7 @@ module irig_state (
 	               input            irig_d1,
 	               input            irig_mark,
 	               output reg       pps_gate, 
-                   output reg       ts_reset,
+                   output reg       ts_finish,
                    output reg [2:0] ts_select,
                    output reg [4:0] bit_idx,
                    output reg [1:0] digit_idx,
@@ -68,7 +68,7 @@ module irig_state (
     always @(*) begin
         next_state = state;
         pps_en = 1'b0;
-        ts_reset = 1'b0;
+        ts_finish = 1'b0;
         ts_select = 3'b0;
 		  bit_idx = 4'b0;
 		  digit_idx = 2'b0;
@@ -87,7 +87,6 @@ module irig_state (
 	      ST_START: begin              
               pps_en = 1'b1;
 		      if (irig_mark) begin
-                  ts_reset = 1'b1;
 				  next_state = ST_SECOND;
               end
 	      end
@@ -167,6 +166,7 @@ module irig_state (
 		      if (irig_mark) begin
 			      next_state = ST_START;
                   pps_en = 1'b1;
+                  ts_finish = 1'b1;
               end
 	      end
 	    endcase

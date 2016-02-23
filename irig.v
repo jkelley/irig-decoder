@@ -25,7 +25,7 @@ module irig(input         clk_10mhz,
     wire                  irig_mark;
     wire                  pps_gate;
     wire [2:0]            ts_select;
-    wire                  ts_reset;
+    wire                  ts_finish;
     wire [4:0]            bit_idx;
     wire [1:0]            digit_idx;
     wire                  bit_value;
@@ -49,7 +49,7 @@ module irig(input         clk_10mhz,
                    .irig_mark(irig_mark),
                    .pps_gate(pps_gate),
                    .ts_select(ts_select),
-                   .ts_reset(ts_reset),
+                   .ts_finish(ts_finish),
                    .bit_idx(bit_idx),
                    .digit_idx(digit_idx),
                    .bit_value(bit_value));
@@ -62,7 +62,7 @@ module irig(input         clk_10mhz,
                        .digit_idx(digit_idx),
                        .bit_value(bit_value),
                        .ts_select(ts_select),
-                       .ts_reset(ts_reset),
+                       .ts_finish(ts_finish),
                        .ts_second(ts_second),
                        .ts_minute(ts_minute),
                        .ts_hour(ts_hour),
