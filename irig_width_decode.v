@@ -28,8 +28,8 @@ module irig_width_decode (
         end else begin
             // Check widths at irig falling edge and produce one-cycle pulse
             irig_mark <= (clk_cnt >= CYCLES_MARK) && !irigb && irigb_last && !irig_mark;
-            irig_d0   <= (clk_cnt >= CYCLES_ONE) && (clk_cnt < CYCLES_MARK) && !irigb && irigb_last && !irig_d0;
-            irig_d1   <= (clk_cnt >= CYCLES_ZERO) && (clk_cnt < CYCLES_ONE) && !irigb && irigb_last && !irig_d1;
+            irig_d1   <= (clk_cnt >= CYCLES_ONE) && (clk_cnt < CYCLES_MARK) && !irigb && irigb_last && !irig_d1;
+            irig_d0   <= (clk_cnt >= CYCLES_ZERO) && (clk_cnt < CYCLES_ONE) && !irigb && irigb_last && !irig_d0;
             
             // Reset count on rising edge of irig bit
             if (irigb && !irigb_last)
