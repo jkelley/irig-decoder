@@ -9,7 +9,7 @@
 // WIPAC / Univ. of Wisconsin-Madison
 // jkelley@icecube.wisc.edu
 //
-module irig(input         clk_10mhz,
+module irig(input         clk, // 10MHz GPS clock (can be async to IRIG-B stream)
             input         rst,
             input         irigb,
             output        pps,
@@ -18,7 +18,8 @@ module irig(input         clk_10mhz,
             output [4:0]  ts_hour,
             output [8:0]  ts_day,
             output [6:0]  ts_year,
-            output [16:0] ts_sec_day);
+            output [16:0] ts_sec_day,
+            output [3:0]  state);
     
     wire                  irig_d0;
     wire                  irig_d1;
@@ -29,10 +30,11 @@ module irig(input         clk_10mhz,
     wire [4:0]            bit_idx;
     wire [1:0]            digit_idx;
     wire                  bit_value;
+    wire [3:0]            state_o;
 
     // Decode the IRIG-B width-encoded bits
     // into data 0, data 1, and mark signals
-    irig_width_decode id1(.clk(clk_10mhz),
+    irig_width_decode id1(.clk(clk),
                           .rst(rst),
                           .irigb(irigb),
                           .irig_mark(irig_mark),
@@ -42,7 +44,7 @@ module irig(input         clk_10mhz,
     // Lock onto and track the IRIG-B "states"
     // separated by mark signals.  Grab the BCD and binary
     // bit values and send them to the timestamp block.
-    irig_state is1(.clk(clk_10mhz),
+    irig_state is1(.clk(clk),
                    .rst(rst),
                    .irig_d0(irig_d0),
                    .irig_d1(irig_d1),
@@ -52,11 +54,12 @@ module irig(input         clk_10mhz,
                    .ts_finish(ts_finish),
                    .bit_idx(bit_idx),
                    .digit_idx(digit_idx),
-                   .bit_value(bit_value));
+                   .bit_value(bit_value),
+                   .state_o(state_o));
 
     // From the BCD and binary bit values, generate
     // the timestamps of the previous whole second
-    irig_timestamp it1(.clk(clk_10mhz),
+    irig_timestamp it1(.clk(clk),
                        .rst(rst),
                        .bit_idx(bit_idx),
                        .digit_idx(digit_idx),
@@ -76,6 +79,9 @@ module irig(input         clk_10mhz,
     // generated from the change in the IRIG signal itself
     // so will be set up in time. 
     assign pps = irigb & pps_gate;
+
+    // State debug output
+    assign state = state_o;
 
 endmodule
 
