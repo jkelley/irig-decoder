@@ -10,10 +10,10 @@ module irig_width_decode (
     
     // 10MHz clock and 10kHz IRIG-B
     // Width encoding of the three states
-    // Add 0.5ms tolerance for shorter pulses
-    localparam CYCLES_ZERO = 17'd15000;
-    localparam CYCLES_ONE  = 17'd45000;
-    localparam CYCLES_MARK = 17'd75000;
+    // Add 0.1ms tolerance for shorter pulses
+    localparam CYCLES_ZERO = 17'd19000;
+    localparam CYCLES_ONE  = 17'd49000;
+    localparam CYCLES_MARK = 17'd79000;
     
     // Clock cycles in an IRIG bit
     reg [16:0]                       clk_cnt = 17'b0;
