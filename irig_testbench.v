@@ -7,7 +7,7 @@ module irig_testbench();
     localparam D0 = 3'b001;
 
     // Inputs to the DUT
-    reg clk_10mhz;
+    reg clk;
     reg rst;
     reg irigb;
  
@@ -19,9 +19,10 @@ module irig_testbench();
     wire [8:0] ts_day;
     wire [6:0] ts_year;
     wire [16:0] ts_sec_day;
+    wire [3:0] state;
     
     // Instantiate the DUT
-    irig i1(.clk_10mhz(clk_10mhz),
+    irig i1(.clk(clk),
             .rst(rst),
             .irigb(irigb),
             .pps(pps),
@@ -30,11 +31,12 @@ module irig_testbench();
             .ts_hour(ts_hour),
             .ts_day(ts_day),
             .ts_year(ts_year),
-            .ts_sec_day(ts_sec_day));
+            .ts_sec_day(ts_sec_day),
+            .state(state));
             
     // Reset
     initial begin
-        clk_10mhz = 1'b0;
+        clk = 1'b0;
         irigb = 1'b0;
         rst = 1'b1;
         
@@ -54,14 +56,18 @@ module irig_testbench();
         // Now send a full stream
         irig_timestamp();
 
-        // Start of next one...
+        // Break the lock
+        irig_bit(D1);
+
+        // Now reestablish the lock
+        irig_bit(MARK);
         irig_bit(MARK);
 
         $stop;
     end
 
     always
-      #50 clk_10mhz = ~clk_10mhz;
+      #50 clk = ~clk;
 
     // Send a full timestamp
     task irig_timestamp;        
@@ -119,9 +125,9 @@ module irig_testbench();
           begin
             case (s[0])
               1'b1:
-                irig_bit(D0);
-              1'b0:
                 irig_bit(D1);
+              1'b0:
+                irig_bit(D0);
             endcase // case (s[0])
             s = s >> 1'b1;
           end 
@@ -132,7 +138,7 @@ module irig_testbench();
     task irig_bit;
         input [2:0] ib; // mark, 1, 0
         begin
-            @(posedge clk_10mhz);
+            @(posedge clk);
             irigb = 1'b1;
             case (ib)
               D0: 
@@ -148,7 +154,7 @@ module irig_testbench();
               MARK:
                 begin 
                     #8000500 irigb = 1'b0;
-                    #2999500;
+                    #1999500;
                 end
             endcase            
         end

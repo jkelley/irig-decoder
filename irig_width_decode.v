@@ -10,9 +10,10 @@ module irig_width_decode (
     
     // 10MHz clock and 10kHz IRIG-B
     // Width encoding of the three states
-    localparam CYCLES_ZERO = 17'd20000;
-    localparam CYCLES_ONE  = 17'd50000;
-    localparam CYCLES_MARK = 17'd80000;
+    // Add 0.1ms tolerance for shorter pulses
+    localparam CYCLES_ZERO = 17'd19000;
+    localparam CYCLES_ONE  = 17'd49000;
+    localparam CYCLES_MARK = 17'd79000;
     
     // Clock cycles in an IRIG bit
     reg [16:0]                       clk_cnt = 17'b0;
@@ -34,8 +35,10 @@ module irig_width_decode (
             // Reset count on rising edge of irig bit
             if (irigb && !irigb_last)
               clk_cnt <= 17'b0;
+            else if (!irigb) // Freeze the counter if no pulse or edge
+              clk_cnt <= clk_cnt;
             else
-              clk_cnt <= clk_cnt+17'b1;
+              clk_cnt <= clk_cnt + 17'b1;
             irigb_last <= irigb;
         end
     end

@@ -9,7 +9,8 @@ module irig_state (
                    output reg [2:0] ts_select,
                    output reg [4:0] bit_idx,
                    output reg [1:0] digit_idx,
-                   output reg       bit_value);
+                   output reg       bit_value,
+                   output reg [3:0] state_o);
 
     // State machine states
     localparam ST_UNLOCKED = 4'd0,
@@ -66,6 +67,7 @@ module irig_state (
     // IRIG decoding state machine
     // FIX ME add checks that cause loss of lock
     always @(*) begin
+        state_o = state;
         next_state = state;
         pps_en = 1'b0;
         ts_finish = 1'b0;
@@ -86,9 +88,12 @@ module irig_state (
           end
           ST_START: begin              
               pps_en = 1'b1;
-              if (irig_mark) begin
-                  next_state = ST_SECOND;
-              end
+              // The "else if" catches a misaligned frame after lock.
+              // If correctly aligned this state should only ever see a Mark on the next clock cycle.
+              if (irig_mark)
+                next_state = ST_SECOND;
+              else if (irig_d0 || irig_d1)
+                next_state = ST_UNLOCKED;
           end
           ST_SECOND: begin
               ts_select = TS_SELECT_SECOND;
